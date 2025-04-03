@@ -1,8 +1,8 @@
-# Authors:     LM
-# Maintainers: LM
-# Date: 24-feb-24
-# ===========================================
-
+# Script: pums-HI-import.R
+# Author: LMN
+# Maintainer: LMN
+# Date: 2025-04-03
+# ---------------------------------------
 # Importing PUMS data for income household
 # Selecting only variables of interest
 

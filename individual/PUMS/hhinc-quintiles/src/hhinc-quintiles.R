@@ -1,8 +1,3 @@
-# Script: measuring-quintiles.R
-# Author: LMN
-# Maintainer: LMN
-# Date: 2025-04-03
-# ---------------------------------------
 
 # Calculating quintiles for Puerto Rico
 # Based on previous PUMS import
@@ -18,7 +13,7 @@ p_load(dplyr,
 
 # args {{{
 args <- list(input = here("individual/PUMS/import/output/pumsHIncome.csv"),
-             output = here("individual/PUMS/income-quintiles/output/HI-quintles.csv"))
+             output = here("individual/PUMS/hhinc-quintiles/output/hhinc-quintiles.csv"))
 
 pums_inc <- fread(args$input)
 

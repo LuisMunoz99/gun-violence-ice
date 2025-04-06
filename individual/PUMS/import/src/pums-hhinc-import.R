@@ -16,7 +16,7 @@ p_load(dplyr,
 
 # args {{{
 args <- list(input = here("individual/PUMS/import/input/psam_h72.csv"),
-             output = here("individual/PUMS/import/output/pumsHIncome.csv"))
+             output = here("individual/PUMS/import/output/pums-hhinc.csv"))
 
 data(pums_variables)
 

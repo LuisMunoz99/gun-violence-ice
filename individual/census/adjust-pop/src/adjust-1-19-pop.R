@@ -23,7 +23,7 @@ pop <- fread(args$input)
 pop_1_19 <- pop %>%
   mutate(
     men_1_4   = (4 / 5) * men_under5,
-    women_1_4 = (4 /5) * women_under5,
+    women_1_4 = (4 / 5) * women_under5,
     pop_1_19 = men_1_4 + men_5_9 + men_10_14 + men_15_17 + men_18_19 +
                women_1_4 + women_5_9 + women_10_14 + women_15_17 + women_18_19
            )  %>%

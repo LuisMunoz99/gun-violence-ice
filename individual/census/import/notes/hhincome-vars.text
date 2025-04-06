@@ -1,0 +1,19 @@
+name	shortname	desc
+1	B19001_001	hhinc_total	total household income estimates
+2	B19001_002	hhinc1	household income <$10k
+3	B19001_003	hhinc2	household income $10k-14,999
+4	B19001_004	hhinc3	household income $15k-19,999
+5	B19001_005	hhinc4	household income $20k-24,999
+6	B19001_006	hhinc5	household income $25k-29,999
+7	B19001_007	hhinc6	household income $30k-34,999
+8	B19001_008	hhinc7	household income $35k-39,999
+9	B19001_009	hhinc8	household income $40k-44,999
+10	B19001_010	hhinc9	household income $45k-49,999
+11	B19001_011	hhinc10	household income $50k-59,999
+12	B19001_012	hhinc11	household income $60k-74,999
+13	B19001_013	hhinc12	household income $75k-99,999
+14	B19001_014	hhinc13	household income $100k-124,999
+15	B19001_015	hhinc14	household income $125k-149,999
+16	B19001_016	hhinc15	household income $150k-199,999
+17	B19001_017	hhinc16	household income $200k or more
+18	B01003_001	pop_total	total population

@@ -1,0 +1,12 @@
+name	shortname	desc
+1	B01001_001	pop_total	hombres y mujeres (all)
+2	B01001_003	men_under5	Hombres <5
+3	B01001_004	men_5_9	Hombres 5–9
+4	B01001_005	men_10_14	Hombres 10–14
+5	B01001_006	men_15_17	Hombres 15–17
+6	B01001_007	men_18_19	Hombres 18–19
+7	B01001_027	women_under5	Mujeres <5
+8	B01001_028	women_5_9	Mujeres 5–9
+9	B01001_029	women_10_14	Mujeres 10–14
+10	B01001_030	women_15_17	Mujeres 15–17
+11	B01001_031	women_18_19	Mujeres 18–19

@@ -12,10 +12,10 @@ pacman::p_load(dplyr, here, data.table, stringr, tidyr)
 # --- Define File Paths Using args$input ---
 args <- list(
   input = here("individual/regdem/import/output/regdem2019-2022.csv"),
-  output = here("individual/regdem/indicators/firearm/output/firearm-2019-2022.csv")
+  output = here("individual/regdem/indicators/firearm/output/firearm.csv")
 )
 
-# --- Define ICD-10 Firearm-Related Codes ---
+# --- Define ICD-10 Firearm-Related ---
 firearm_codes <- c(
   "W32", "W33", "W34",  # Accidental firearm discharge
   "X72", "X73", "X74",  # Intentional self-harm by firearm (suicide)
@@ -29,17 +29,18 @@ firearm_codes <- c(
   "Y22.0", "Y22.1", "Y22.8", "Y22.9"
 )
 
-firearm <- read.csv(args$input) %>%
+firearm <- fread(args$input) %>%
   mutate(
     DeathCause_I_ID   = toupper(trimws(DeathCause_I_ID)),
     DeathCause_I_Desc = tolower(trimws(DeathCause_I_Desc)),
-    firearm = case_when(
+    ind_firearm = case_when(
       DeathCause_I_ID %in% firearm_codes ~ TRUE,
       str_detect(DeathCause_I_Desc, "\\b(firearm|gun|pistol|rifle|shotgun)\\b") ~ TRUE,
       TRUE ~ NA
     )
-  ) %>%
-  filter(firearm)
+  ) %>% filter(ind_firearm)  %>%
+        distinct(ControlNumber, ind_firearm = TRUE)  
+
 
 # output 
-write.csv(firearm, args$output) 
+fwrite(firearm, args$output, row.names = FALSE) 

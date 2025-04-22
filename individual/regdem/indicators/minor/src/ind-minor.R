@@ -1,21 +1,22 @@
-# Authors:     LM
-# Maintainers: LM
-# Date: 22-Aug-24
+# Script: ind-minor.R
+# Author: LMN
+# Maintainer: LMN
+# Date: 2025-04-21
+# ---------------------------------------
 
 # --- libs ---
 if (!require(pacman)) install.packages("pacman")
 p_load(dplyr,
        here,
        data.table,
-       openxlsx,
        stringr)
 
 
 args <- list(input = here("individual/regdem/import/output/regdem2019-2022.csv"),
-             output = here("individual/regdem/indicators/minors/output/minors.csv"))
+             output = here("individual/regdem/indicators/minor/output/minor.csv"))
 
 # --- Import data -
-minors <- fread(args$input) %>%
+minor <- fread(args$input) %>%
     filter(AgeUnit %in% c("Years", "1-135 AÑOS")) %>%
     filter(!is.na(Age) & Age != 0) %>%
     mutate(
@@ -24,4 +25,4 @@ minors <- fread(args$input) %>%
     distinct(ControlNumber, ind_minor = TRUE) 
 
 # export 
-fwrite(minors, args$output, row.names = FALSE)
+fwrite(minor, args$output, row.names = FALSE)

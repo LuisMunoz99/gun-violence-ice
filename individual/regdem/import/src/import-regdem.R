@@ -1,12 +1,12 @@
-## Death Registry Cleaner: Exportar datos 2019–2022 (individual y combinado)
-# Author: LM | Date: 1-Apr-2025
+# Script: import-regdem.R
+# Author: LMN
+# Maintainer: LMN
+# Date: 2025-04-21
+# ---------------------------------------
 
-# Cargar y, si es necesario, instalar el paquete pacman
 if (!require(pacman)) install.packages("pacman")
 pacman::p_load(dplyr, here, readxl, lubridate, purrr, stringr)
 
-# --- Definición de rutas de entrada y salida ---
-# Se definen los archivos de entrada por año.
 args <- list(
   "2015-2020" = here("individual/regdem/import/input/regdem_2015-2020.xlsx"),  # Archivo con datos de varios años; se filtrará 2019
   "2020" = here("individual/regdem/import/input/regdem2020.xlsx"),
@@ -14,8 +14,7 @@ args <- list(
   "2022" = here("individual/regdem/import/input/regdem_2022.xlsx"),
   output_dir = here("individual/regdem/import/output/"))
 
-# --- Función para limpiar y estandarizar los datos ---
- clean <- function(df) {
+clean_regdem <- function(df) {
   df %>%
     select(
       DeathDate, ControlNumber, Name, LastName, SecondLastName, Age, AgeUnit,
@@ -46,27 +45,27 @@ regdem <- list()
 
 # using onlye 2019 freom 2015-2020 
 regdem[["2019"]]<- read_xlsx(args$`2015-2020`) %>%
-    clean() %>% 
-    filter(DeathDate_Year == "2019")
+    clean_regdem() %>% 
+    filter(DeathDate_Year == "2019" | InscriptionYear == "2019")
 
 # 2020 
 regdem[["2020"]]<- read_xlsx(args$`2020`) %>%
-    clean() %>% 
+    clean_regdem() %>% 
     filter(DeathDate_Year == "2020")
 
 
 # 2021
 regdem[["2021"]]<- read_xlsx(args$`2021`) %>%
-    clean() %>% 
+    clean_regdem() %>% 
     filter(DeathDate_Year == "2021")
 
 # 2022
 regdem[["2022"]]<- read_xlsx(args$`2022`) %>%
-    clean() %>% 
+    clean_regdem() %>% 
     filter(DeathDate_Year == "2022")
 
 
-# export
+# export (only years of intrerest 2019-2022) 
 for (i in seq_along(regdem)) {
   year <- names(regdem)[i]
   output_file <- paste0(args$output_dir,"regdem",year,".csv")

@@ -1,9 +1,8 @@
-## Authors: LM
-# Maintainers: LM
-# Date: 19-Feb-24
-# =========================================
-# Purpose: Extract firearm-related deaths among minors (1-19 years old)
-# Data Source: Death Registry database (2019-2022)
+# Script: ind-firearm.R
+# Author: LMN
+# Maintainer: LMN
+# Date: 2025-04-21
+# ---------------------------------------
 
 # --- Load Required Libraries ---
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")

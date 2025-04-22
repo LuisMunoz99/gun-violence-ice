@@ -1,16 +1,21 @@
+# Script: merge.R
+# Author: LMN
+# Maintainer: LMN
+# Date: 2025-04-21
+# ---------------------------------------
+
 # --- libs ---
 if (!require(pacman)) install.packages("pacman")
 p_load(dplyr,
        here,
        data.table,
-       openxlsx,
        stringr)
 
 
 args <- list(input = here("individual/regdem/import/output/regdem2019-2022.csv"),
-             minors = here("individual/regdem/indicators/minors/output/minors.csv"),
+             minors = here("individual/regdem/indicators/minor/output/minor.csv"),
              firearm = here("individual/regdem/indicators/firearm/output/firearm.csv"),
-             output = here("individual/regdem/indicators/export/output/regdem2019-2022-final.csv"))
+             output = here("individual/regdem/export/output/regdem2019-2022-final.csv"))
 
 
 minor <- fread(args$minors)

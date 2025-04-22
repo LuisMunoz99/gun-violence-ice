@@ -12,8 +12,8 @@ p_load(dplyr,
        tidyr,
        tidycensus)
 
-args <- list(output1 = here("./individual/census/import/output/hhincome-census.csv"),
-             output2 = here("./individual/census/import/notes/hhincome-vars.text"))
+args <- list(output = here("./individual/census/import/output/hhincome-census.csv"),
+             notes = here("./individual/census/import/notes/hhincome-vars.txt"))
 
 # --- import ---
 
@@ -56,7 +56,7 @@ inc <- income_data %>%
   pivot_wider(names_from = shortname, values_from = estimate) 
 
 # -- Output ---
-fwrite(inc, args$output1)
-write.table(income_data_vars, args$output2, sep = "\t", quote = FALSE)
+fwrite(inc, args$output)
+write.table(income_data_vars, args$notes, sep = "\t", quote = FALSE)
 
 #Done

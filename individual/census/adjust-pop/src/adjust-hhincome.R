@@ -15,7 +15,7 @@ p_load(dplyr,
 
 # args {{{
 args <- list(input = here("./individual/census/import/output/hhincome-census.csv"),
-             quintiles = here("./individual/PUMS/hhinc-quintiles/output/hhinc-quintiles.csv"),
+             quintiles = here("./individual/PUMS/output/hhinc-quintiles.csv"),
              output = here("./individual/census/adjust-pop/output/hhincome-census-final.csv"))
 
 # -- Import ---
@@ -33,18 +33,12 @@ q5_limit <- quintiles_PUMS$upper.limits[4]  # Lower bound of top 20% (> $49,300)
 # assuming uniform distribution within each income bracket.
 
 income_adjusted <- income_census %>%
+    filter(pop_total  >= 60)  %>%
   mutate(
     # Estimate households with income < $7,808 within <$10,000 category
     hhinc_7808 = (q1_limit / 10000) * hhinc1,
 
     # Estimate households with income > $49,300 within the $45k–$49,999 category
-    hhinc_49300 = ((49999 - q5_limit) / 5000) * hhinc9,
-
-    # Q1: Population in the most economically deprived stratum
-    q1 = hhinc_7808,
-
-    # Q5: Population in the most economically privileged stratum
-    q5 = hhinc_49300 + hhinc10 + hhinc11 + hhinc12 + hhinc13 + hhinc14 + hhinc15 + hhinc16
-  )
+    hhinc_49300 = ((49999 - q5_limit) / 5000) * hhinc9)
 
 fwrite(income_adjusted, args$output)

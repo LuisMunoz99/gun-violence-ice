@@ -1,15 +1,8 @@
-# Authors:     LM
-# Maintainers: LM
-# Date: 25-Feb-24
-
-# Importing data from census 
-# =========================================
-
-# Importing census data for ICE income indicators
-# to analyze firearm deaths in minors
-
-### Things to do here, we have just to import all variables involving income
-## After that we will downstream the imputations for quintiles
+# Script: import-race.R
+# Author: LMN
+# Maintainer: LMN
+# Date: 2025-04-21
+# ---------------------------------------
 
 
 # --- libs ---
@@ -21,13 +14,9 @@ p_load(dplyr,
        tidyr,
        tidycensus)
 
-args <- list(output1 = here("ICE/race/import/output/IceCensusRace.csv"),
-             output2 = here("ICE/race/import/notes/IceRaceVarsDic.txt"))
+args <- list(output = here("./individual/census/import/output/race-census.csv"),
+             notes = here("./individual/census/import/notes/IceRaceVarsDic.txt"))
 
-
-
-# --- import ---
-# var_dic <- load_variables(2021, "acs5") # Importing all variables in census
 
 # Variables corresponding to ICE measure
 race_data_vars <-
@@ -38,7 +27,6 @@ race_data_vars <-
     "B02001_003", 'black',     "Black alone")
 
 
-
 # -- import ---
 race_data <- get_acs(
   geography = "tract",
@@ -46,41 +34,19 @@ race_data <- get_acs(
   state = "PR",
   year = 2022,
   survey = "acs5",
-  geometry = TRUE,
   show_call = TRUE)
 
 
-
-race_data_geom <- race_data %>% select(GEOID) %>% unique()
-
 # remove geometry data so we can use pivot_wider
-census_race <- race_data %>% st_drop_geometry() %>%
-  
-  # Left join to tibble
+race <- race_data %>% st_drop_geometry() %>%
   left_join(race_data_vars, by = c("variable" = "name")) %>% 
-  
-  # Dropping extra vars
   select(-moe, -variable, -desc) %>% 
-  
-  # Pivoting 
-  pivot_wider(names_from = shortname, values_from = estimate) %>% 
-  
-  # Removing small pops 
-  filter(pop_total > 60)
+  pivot_wider(names_from = shortname, values_from = estimate)
 
-
-# POP
-out <- census_race %>% 
-  mutate(POC = pop_total - white)
-
-
-
-# -- Output ---
-# Variable desc
-write.table(race_data_vars, args$output2, sep = "\t", quote = FALSE)
 
 # Output
-fwrite(out, args$output1)
+fwrite(race, args$output)
+write.table(race_data_vars, args$notes, sep = "\t", quote = FALSE)
 
 
 

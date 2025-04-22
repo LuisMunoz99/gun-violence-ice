@@ -1,0 +1,53 @@
+name	shortname	desc
+1	B19001_001	hhinc_total	Total household income estimates
+2	B19001_002	hhinc1	Household income <$10k
+3	B19001_003	hhinc2	Household income $10k-14,999
+4	B19001_004	hhinc3	Household income $15k-19,999
+5	B19001_005	hhinc4	Household income $20k-24,999
+6	B19001_006	hhinc5	Household income $25k-29,999
+7	B19001_007	hhinc6	Household income $30k-34,999
+8	B19001_008	hhinc7	Household income $35k-39,999
+9	B19001_009	hhinc8	Household income $40k-44,999
+10	B19001_010	hhinc9	Household income $45k-49,999
+11	B19001_011	hhinc10	Household income $50k-59,999
+12	B19001_012	hhinc11	Household income $60k-74,999
+13	B19001_013	hhinc12	Household income $75k-99,999
+14	B19001_014	hhinc13	Household income $100k-124,999
+15	B19001_015	hhinc14	Household income $125k-149,999
+16	B19001_016	hhinc15	Household income $150k-199,999
+17	B19001_017	hhinc16	Household income $200k or more
+18	B01003_001	pop_total	total population
+19	B19001A_001	hhinc_white_total	White alone total household income estimates
+20	B19001A_002	hhinc_white_1	White alone household income <$10k
+21	B19001A_003	hhinc_white_2	White alone household income $10k-14,999
+22	B19001A_004	hhinc_white_3	White alone household income $15k-19,999
+23	B19001A_005	hhinc_white_4	White alone household income $20k-24,999
+24	B19001A_006	hhinc_white_5	White alone household income $25k-29,999
+25	B19001A_007	hhinc_white_6	White alone household income $30k-34,999
+26	B19001A_008	hhinc_white_7	White alone household income $35k-39,999
+27	B19001A_009	hhinc_white_8	White alone household income $40k-44,999
+28	B19001A_010	hhinc_white_9	White alone household income $45k-49,999
+29	B19001A_011	hhinc_white_10	White alone household income $50k-59,999
+30	B19001A_012	hhinc_white_11	White alone household income $60k-74,999
+31	B19001A_013	hhinc_white_12	White alone household income $75k-99,999
+32	B19001A_014	hhinc_white_13	White alone household income $100k-124,999
+33	B19001A_015	hhinc_white_14	White alone household income $125k-149,999
+34	B19001A_016	hhinc_white_15	White alone household income $150k-199,999
+35	B19001A_017	hhinc_white_16	White alone household income $200k or more
+36	B19001B_001	hhinc_black_total	Black alone total household income estimates
+37	B19001B_002	hhinc_black_1	Black alone household income <$10k
+38	B19001B_003	hhinc_black_2	Black alone household income $10k-14,999
+39	B19001B_004	hhinc_black_3	Black alone household income $15k-19,999
+40	B19001B_005	hhinc_black_4	Black alone household income $20k-24,999
+41	B19001B_006	hhinc_black_5	Black alone household income $25k-29,999
+42	B19001B_007	hhinc_black_6	Black alone household income $30k-34,999
+43	B19001B_008	hhinc_black_7	Black alone household income $35k-39,999
+44	B19001B_009	hhinc_black_8	Black alone household income $40k-44,999
+45	B19001B_010	hhinc_black_9	Black alone household income $45k-49,999
+46	B19001B_011	hhinc_black_10	Black alone household income $50k-59,999
+47	B19001B_012	hhinc_black_11	Black alone household income $60k-74,999
+48	B19001B_013	hhinc_black_12	Black alone household income $75k-99,999
+49	B19001B_014	hhinc_black_13	Black alone household income $100k-124,999
+50	B19001B_015	hhinc_black_14	Black alone household income $125k-149,999
+51	B19001B_016	hhinc_black_15	Black alone household income $150k-199,999
+52	B19001B_017	hhinc_black_16	Black alone household income $200k or more

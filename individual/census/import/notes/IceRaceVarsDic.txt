@@ -1,0 +1,4 @@
+name	shortname	desc
+1	B01003_001	pop_total	Total population
+2	B02001_002	white	White alone
+3	B02001_003	black	Black alone

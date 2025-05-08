@@ -46,7 +46,8 @@ regdem <- list()
 # using onlye 2019 freom 2015-2020 
 regdem[["2019"]]<- read_xlsx(args$`2015-2020`) %>%
     clean_regdem() %>% 
-    filter(DeathDate_Year == "2019" | InscriptionYear == "2019")
+    filter(DeathDate_Year == "2019") 
+
 
 # 2020 
 regdem[["2020"]]<- read_xlsx(args$`2020`) %>%

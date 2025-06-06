@@ -28,4 +28,4 @@ out <- regdem  %>%
 
 
 # output
-fwrite(regdem, args$output)
+fwrite(out, args$output)

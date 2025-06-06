@@ -5,7 +5,7 @@
 # ---------------------------------------
 
 if (!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, here, readxl, lubridate, purrr, stringr)
+pacman::p_load(dplyr, here, readxl, lubridate, purrr, stringr, data.table)
 
 args <- list(
   "2015-2020" = here("individual/regdem/import/input/regdem_2015-2020.xlsx"),  # Archivo con datos de varios años; se filtrará 2019
@@ -24,13 +24,13 @@ clean_regdem <- function(df) {
       DeathCause_I_ID = `DeathCause_I (ID)`,
       DeathCause_I_Desc = `DeathCause_I (Desription)`
     ) %>%
-    mutate(across(starts_with("residence"), as.character))  %>%
+    mutate(across(starts_with("Residence"), as.character))  %>%
     mutate(
       parsed_date = parse_date_time(DeathDate, orders = c("ymd", "mdy", "dmy")),
       DeathDate = format(parsed_date, "%Y-%m-%d"),
       DeathDate_Year = format(parsed_date, "%Y"),
       ControlNumber = toupper(str_trim(ControlNumber)),
-      Age = as.integer(suppressWarnings(Age)),
+      Age = as.integer(Age),
       Age = ifelse(Age < 0 | Age > 120, NA, Age),
       Gender = str_trim(tolower(Gender)),
       Gender = case_when(
@@ -75,4 +75,4 @@ for (i in seq_along(regdem)) {
 
 merge <- bind_rows(regdem)  
 
-write.csv(merge, paste0(args$output_dir,"regdem2019-2022.csv"))
+fwrite(merge, paste0(args$output_dir,"regdem2019-2022.csv"))

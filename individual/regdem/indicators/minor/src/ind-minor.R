@@ -6,10 +6,7 @@
 
 # --- libs ---
 if (!require(pacman)) install.packages("pacman")
-p_load(dplyr,
-       here,
-       data.table,
-       stringr)
+pacman::p_load(dplyr, here, data.table, stringr)
 
 
 args <- list(input = here("individual/regdem/import/output/regdem2019-2022.csv"),

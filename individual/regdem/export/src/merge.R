@@ -13,16 +13,19 @@ p_load(dplyr,
 
 
 args <- list(input = here("individual/regdem/import/output/regdem2019-2022.csv"),
-             minors = here("individual/regdem/indicators/minor/output/minor.csv"),
-             firearm = here("individual/regdem/indicators/firearm/output/firearm.csv"),
+             indicators = here("individual/regdem/indicators/export/output/indicators.csv"),
              output = here("individual/regdem/export/output/regdem2019-2022-final.csv"))
 
+indicators <- fread(args$indicators)
 
-minor <- fread(args$minors)
-firearm <- fread(args$firearm)
-regdem <- fread(args$input)  %>%
-    left_join(minor, by = "ControlNumber")  %>%
-    left_join(firearm, by = "ControlNumber")
+regdem <- fread(args$input)  
+
+out <- regdem  %>%
+    left_join(indicators, by = "ControlNumber")  %>%
+      mutate(across(starts_with("ind_"), ~ coalesce(.x, FALSE))) 
+      
+
+
 
 # output
 fwrite(regdem, args$output)

@@ -17,8 +17,8 @@ p_load(dplyr,
        knitr)
 
 # args {{{
-args <- list(input = here("individual/PUMS/output/pums-hhinc.csv"),
-             output = here("individual/PUMS/output/hhinc-quintiles.csv"))
+args <- list(input = here("individual/PUMS/import/output/pums-hhinc.csv"),
+             output = here("individual/PUMS/hhinc-quintiles/output/hhinc-quintiles.csv"))
 
 pums_inc <- fread(args$input)
 

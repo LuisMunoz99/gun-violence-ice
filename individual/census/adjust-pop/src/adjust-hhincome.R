@@ -15,7 +15,7 @@ p_load(dplyr,
 
 # args {{{
 args <- list(input = here("./individual/census/import/output/hhincome-census.csv"),
-             quintiles = here("./individual/PUMS/output/hhinc-quintiles.csv"),
+             quintiles = here("./individual/PUMS/export/output/hhinc-quintiles.csv"),
              output = here("./individual/census/adjust-pop/output/hhincome-census-final.csv"))
 
 # -- Import ---

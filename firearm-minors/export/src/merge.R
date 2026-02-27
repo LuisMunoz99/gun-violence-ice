@@ -24,10 +24,11 @@ coords <- fread(args$coords)
 
 
 out <- df %>%
-    mutate(ControlNumber = tolower(ControlNumber)) %>%
   left_join(coords, by = "ControlNumber") %>%
   select(-AgeUnit, -starts_with("Residence"))
 
-
+ifelse(nrow(filter(out, is.na(GEOID))) > 1, 
+       stop("Join failed: more than 1 unmatched ControlNumber"),
+       TRUE)
 
 fwrite(out, args$output) 

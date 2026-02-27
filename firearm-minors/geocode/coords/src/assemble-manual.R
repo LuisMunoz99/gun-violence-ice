@@ -18,8 +18,8 @@ args <- list(input = here("./firearm-minors/import/output/firearm-minors-2019-20
 df <- fread(args$input)
 
 out <- df %>%
-    mutate_all(~tolower(.)) %>%
-    mutate_all(~str_squish(.)) %>%
+    mutate(across(starts_with("Residence"), ~ tolower(.)))  %>%
+    mutate(across(where(is.character), ~ str_squish(.))) %>%
     mutate(longitude = NA_character_,
            latitude = NA_character_)  %>%
  select(DeathDate, 

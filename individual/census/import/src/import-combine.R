@@ -14,7 +14,7 @@ p_load(dplyr,
        tidycensus)
 
 args <- list(
-  output = here("./individual/census/import/output/hhincome-race-census.csv"),
+  output = here("./individual/census/import/output/combine-census.csv"),
   notes = here("./individual/census/import/notes/hhincome-race-vars.txt"))
 
 # --- import --- 
@@ -24,25 +24,8 @@ combined_vars <- tibble::tribble(
     ~name,          ~shortname,          ~desc,
     # Importing total household income for all races
     "B19001_001",   "hhinc_total",       "Total household income estimates",
-    "B19001_002",   "hhinc1",            "Household income <$10k",
-    "B19001_003",   "hhinc2",            "Household income $10k-14,999",
-    "B19001_004",   "hhinc3",            "Household income $15k-19,999",
-    "B19001_005",   "hhinc4",            "Household income $20k-24,999",
-    "B19001_006",   "hhinc5",            "Household income $25k-29,999",
-    "B19001_007",   "hhinc6",            "Household income $30k-34,999",
-    "B19001_008",   "hhinc7",            "Household income $35k-39,999",
-    "B19001_009",   "hhinc8",            "Household income $40k-44,999",
-    "B19001_010",   "hhinc9",            "Household income $45k-49,999",
-    "B19001_011",   "hhinc10",           "Household income $50k-59,999",
-    "B19001_012",   "hhinc11",           "Household income $60k-74,999",
-    "B19001_013",   "hhinc12",           "Household income $75k-99,999",
-    "B19001_014",   "hhinc13",           "Household income $100k-124,999",
-    "B19001_015",   "hhinc14",           "Household income $125k-149,999",
-    "B19001_016",   "hhinc15",           "Household income $150k-199,999",
-    "B19001_017",   "hhinc16",           "Household income $200k or more",
-    "B01003_001",   "pop_total",         "total population",
+    "B01003_001", 'pop_total',    "total population",
 
-    
     # White alone income households
     "B19001A_001",  "hhinc_white_total", "White alone total household income estimates",
     "B19001A_002",  "hhinc_white_1",     "White alone household income <$10k",

@@ -15,7 +15,6 @@ p_load(dplyr,
 args <- list(output = here("./individual/census/import/output/hhincome-census.csv"),
              notes = here("./individual/census/import/notes/hhincome-vars.txt"))
 
-# --- import ---
 
 # Variables corresponding to ICE measure
 income_data_vars <-

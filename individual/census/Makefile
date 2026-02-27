@@ -11,7 +11,7 @@ ADJDIR = adjust-pop/output
 EXPDIR = export/output
 
 HHINC      = $(ADJDIR)/hhincome-census-final.csv
-HHINC_RACE = $(ADJDIR)/hhincome-race-census-final.csv
+HHINC_RACE = $(ADJDIR)/combine-census-final.csv
 POP_1_19   = $(ADJDIR)/pop-1-19-census-final.csv
 RACE       = $(ADJDIR)/race-census-final.csv
 

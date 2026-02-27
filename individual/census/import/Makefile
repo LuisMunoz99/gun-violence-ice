@@ -1,34 +1,82 @@
 # Makefile: Import census data
 # Autor: LMN
 
+# Makefile: Import census data
+# Author: LMN
+# Purpose: Import household income, race, and child population data from ACS
 
-HHINC_OUT       = output/hhincome-census.csv
-RACE_OUT        = output/race-census.csv
-POP_OUT         = output/pop-1-19-census.csv
-COMBINED_OUT    = output/hhincome-race-census.csv
+# --------------------
+# Paths to output files
+# --------------------
+HHINC_CSV  = output/hhincome-census.csv
+RACE_CSV   = output/race-census.csv
+POP_CSV    = output/pop-1-19-census.csv
+COMB_CSV   = output/hhincome-race-census.csv
 
-HHINC_VARS      = notes/hhincome-vars.txt
-RACE_VARS       = notes/race-vars.txt
-POP_VARS        = notes/pop-vars.txt
-COMBINED_VARS   = notes/hhincome-race-vars.txt
+HHINC_TXT  = notes/hhincome-vars.txt
+RACE_TXT   = notes/race-vars.txt
+POP_TXT    = notes/pop-vars.txt
+COMB_TXT   = notes/hhincome-race-vars.txt
 
+# Done markers
+HHINC_DONE = .done/hhincome.done
+RACE_DONE  = .done/race.done
+POP_DONE   = .done/pop.done
+COMB_DONE  = .done/combine.done
 
-all: $(HHINC_OUT) $(RACE_OUT) $(POP_OUT) $(COMBINED_OUT) \
-     $(HHINC_VARS) $(RACE_VARS) $(POP_VARS) $(COMBINED_VARS)
+# --------------------
+# Default target
+# --------------------
+.PHONY: all clean
 
+all: $(HHINC_CSV) $(RACE_CSV) $(POP_CSV) $(COMB_CSV) \
+     $(HHINC_TXT) $(RACE_TXT) $(POP_TXT) $(COMB_TXT)
 
-$(HHINC_OUT) $(HHINC_VARS): src/import-hhincome.R
+# --------------------
+# Household income
+# --------------------
+$(HHINC_DONE): src/import-hhincome.R
 	Rscript --vanilla $<
+	mkdir -p .done
+	touch $@
 
-$(RACE_OUT) $(RACE_VARS): src/import-race.R
+$(HHINC_CSV) $(HHINC_TXT): $(HHINC_DONE)
+
+# --------------------
+# Race
+# --------------------
+$(RACE_DONE): src/import-race.R
 	Rscript --vanilla $<
+	mkdir -p .done
+	touch $@
 
-$(POP_OUT) $(POP_VARS): src/import-1-19-pop.R
+$(RACE_CSV) $(RACE_TXT): $(RACE_DONE)
+
+# --------------------
+# Population 1–19
+# --------------------
+$(POP_DONE): src/import-1-19-pop.R
 	Rscript --vanilla $<
+	mkdir -p .done
+	touch $@
 
-$(COMBINED_OUT) $(COMBINED_VARS): src/import-combine.R
+$(POP_CSV) $(POP_TXT): $(POP_DONE)
+
+# --------------------
+# Combine race + income
+# --------------------
+$(COMB_DONE): src/import-combine.R
 	Rscript --vanilla $<
+	mkdir -p .done
+	touch $@
 
+$(COMB_CSV) $(COMB_TXT): $(COMB_DONE)
+
+# --------------------
+# Clean outputs
+# --------------------
 clean:
-	rm -f output/*.csv notes/*.txt
+	rm -f output/*.csv notes/*.txt .done/*.done
+
+
 

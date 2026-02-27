@@ -29,7 +29,7 @@ input <- fread(args$input)  %>%
 out <-  input %>%
   mutate(
     ind_firearm = case_when(
-                            str_detect(DeathCause_I_ID, "(W32|W33|W34|X72|X73|X74|X93|X94|X95|Y22|Y23|Y24)") ~ TRUE,
+                            str_detect(DeathCause_I_ID, "(W32|W33|W34|X72|X73|X74|X93|X94|X95|Y22|Y23|Y24|Y350)") ~ TRUE,
                             str_detect(DeathCause_I_Desc, "\\b(firearm|gun|pistol|rifle|shotgun)\\b") ~ TRUE,
       TRUE ~ FALSE
     )

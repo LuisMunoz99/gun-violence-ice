@@ -1,4 +1,4 @@
-# Script: adjust-hhincome-race.R
+# Script: adjust-combine.R
 # Author: LMN
 # Maintainer: LMN
 # Date: 2025-04-13
@@ -13,9 +13,9 @@ pacman::p_load(dplyr, tidycensus, data.table, here, tidyr)
 
 # --- Args ---
 args <- list(
-  input     = here("individual/census/import/output/hhincome-race-census.csv"),
+  input     = here("individual/census/import/output/combine-census.csv"),
   quintiles = here("individual/PUMS/export/output/hhinc-quintiles.csv"),
-  output    = here("individual/census/adjust-pop/output/hhincome-race-census-final.csv")
+  output    = here("individual/census/adjust-pop/output/combine-census-final.csv")
 )
 
 # --- Import data ---
@@ -59,10 +59,6 @@ q5_limit <- quintiles$upper.limits[4]  # Lower bound of top 20%
 out <- hhinc_race %>%
   filter(pop_total >= 60) %>%
   mutate(
-    # Total population estimates
-    hhinc_7808   = (q1_limit / 10000) * hhinc1,
-    hhinc_49300  = ((49999 - q5_limit) / 5000) * hhinc9,
-
     # Race-specific estimates (no additional race weighting needed)
     hhinc_7808_white  = (q1_limit / 10000) * hhinc_white_1,
     hhinc_49300_white = ((49999 - q5_limit) / 5000) * hhinc_white_9,
@@ -73,4 +69,3 @@ out <- hhinc_race %>%
 
 # --- Save output ---
 fwrite(out, args$output)
-

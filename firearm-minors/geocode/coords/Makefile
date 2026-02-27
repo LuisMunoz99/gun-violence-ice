@@ -7,10 +7,10 @@ coords = output/coordinates.csv
 
 all: $(coords)
 
-$(coords): src/import-manual.R $(manual-done)
+$(coords): src/import-manual.R $(manual_done) $(assemble)
 	Rscript $<
 
-$(assemble): src/assemble-manual.R
+$(assemble): src/assemble-manual.R 
 	Rscript $<
 
 clean:

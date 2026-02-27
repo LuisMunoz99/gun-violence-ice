@@ -22,10 +22,9 @@ coords <- read_xlsx(args$input)  %>%
 
 out <- coords %>%
   mutate(
-    latitude  = as.numeric(latitude),
-    longitude = as.numeric(longitude)
+         latitude  = as.numeric(latitude),
+         longitude = as.numeric(longitude)
   ) %>%
-  filter(!is.na(latitude) | !is.na(longitude))  %>%
   distinct(ControlNumber, latitude, longitude) 
 
 

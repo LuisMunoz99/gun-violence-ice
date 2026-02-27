@@ -1,0 +1,187 @@
+title: "Principales causas de muertes entre ninos y jovenes (1-19) 
+author: "Luis Emilio Muñoz"
+date: "`r Sys.Date()`"
+output:
+html\_document:
+toc: true
+toc\_depth: 3
+-------------
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(dplyr)
+library(data.table) 
+library(ggplot2)
+library(here) 
+library(lubridate)
+library(knitr)
+```
+
+# 1. Importación de datos
+
+```{r data-import}
+df <- fread(here("./individual/regdem/export/output/regdem2019-2022-final.csv"))
+minor <- df  %>%
+    filter(ind_minor) 
+```
+
+# 2. Datos Generales
+
+```{r total-minors}
+# Número total de menores en el dataset
+total_minors <- nrow(minor)
+cat("Total de menores: ", total_minors)
+```
+
+## 2.1 Distribución por año
+
+```{r distribution-year}
+# Suponiendo columna DeathDate en formato año
+annual_dist <- minor %>%
+  count(DeathDate_Year) %>%
+  arrange(DeathDate_Year)
+
+kable(annual_dist, col.names = c("Año", "Frecuencia")) #falta anadir codigos de suicidio no parece incluirlo 
+```
+
+## 2.2 Distribución por edad
+
+```{r distribution-age}
+# Suponiendo columna age
+age_summary <- minor %>%
+  summarise(
+    Min = min(Age, na.rm = TRUE),
+    Q1 = quantile(Age, .25, na.rm = TRUE),
+    Median = median(Age, na.rm = TRUE),
+    Mean = mean(Age, na.rm = TRUE),
+    Q3 = quantile(Age, .75, na.rm = TRUE),
+    Max = max(Age, na.rm = TRUE)
+  )
+
+kable(age_summary)
+
+# Histograma de edades
+ggplot(minor, aes(x = Age)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Distribución de Edad", x = "Edad", y = "Conteo") +
+  theme_minimal()
+```
+
+## 2.3 Distribución por género
+
+```{r distribution-gender}
+# Suponiendo columna gender
+gender_dist <- minor %>%
+  count(Gender) %>%
+  mutate(pct = n / sum(n) * 100)
+
+kable(gender_dist, col.names = c("Género", "Frecuencia", "%"))
+```
+
+# 3. Principales Causas de Muerte
+
+## 3.1 Lista completa de códigos ICD
+
+```{r list-icd}
+icd_list <- sort(unique(minor$DeathCause_I_ID))
+length(icd_list)
+# Mostrar vector completo o primeros 20
+head(icd_list, 20)
+```
+
+## 3.2 Top 10 códigos ICD crudos
+
+```{r top10-icd}
+top10_icd <- minor %>%
+  count(DeathCause_I_ID) %>%
+  arrange(desc(n)) %>%
+  slice_head(n = 10)
+
+kable(top10_icd, col.names = c("ICD Code", "Frecuencia"))
+```
+
+## 3.3 Top 10 categorías recodificadas
+
+```{r top10-recoded}
+top10_recoded <- minor %>%
+  count(cause_category) %>%
+  arrange(desc(n)) %>%
+  slice_head(n = 10)
+
+kable(top10_recoded, col.names = c("Categoría", "Frecuencia"))
+```
+
+## 3.4 Distribución de todos los códigos ICD por añ o
+
+```{r icd-by-year}
+icd_by_year <- minor %>%    # porque InscriptionYear tiene 2023????
+  count(DeathDate_Year, DeathCause_I_ID)
+
+ggplot(icd_by_year, aes(x = DeathDate_Year, y = n, group = DeathCause_I_ID)) +
+  geom_line(alpha = 0.3) +
+  labs(title = "Distribución de Códigos ICD por Año", x = "Año", y = "Frecuencia") +
+  theme_minimal()
+```
+
+## 3.5 Distribución de categorías recodificadas
+
+```{r freq-all-recoded}
+freq_all_recoded <- minor %>%
+  count(cause_category) %>%
+  arrange(desc(n))
+knitr::kable(freq_all_recoded, col.names = c("Categoría", "Frecuencia"))
+```
+
+## 3.6 Tendencia de causas recodificadas por año
+
+```{r recoded-by-year}
+recoded_yearly <- minor %>%
+  count(DeathDate_Year, cause_category)
+
+ggplot(recoded_yearly, aes(x = DeathDate_Year, y = n, color = cause_category)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Tendencia de causas de muerte por categoría",
+    x = "Año",
+    y = "Frecuencia",
+    color = "Categoría"
+  ) +
+  theme_minimal()
+```
+
+# 4. Enfoque: Armas de Fuego
+
+```{r firearms-filtered}
+firearms_df <- minor %>% filter(cause_category == "Firearms")
+```
+
+## 4.1 Distribución de muertes por armas de fuego por año
+
+```{r firearms-year}
+fire_yearly <- firearms_df %>% count(year)
+
+ggplot(fire_yearly, aes(x = year, y = n)) +
+  geom_col() +
+  labs(title = "Muertes por Armas de Fuego por Año", x = "Año", y = "Frecuencia") +
+  theme_minimal()
+```
+
+## 4.2 Tabla de códigos ICD (Firearms) para referencia
+
+```{r firearms-icd-table}
+fire_icd_codes <- sort(unique(firearms_df$DeathCause_I_ID))
+length(fire_icd_codes)
+fire_icd_codes
+```
+
+## 4.3 Distribución por edad (Firearms)
+
+```{r firearms-age}
+ggplot(firearms_df, aes(x = age)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Edad en Muertes por Armas de Fuego", x = "Edad", y = "Conteo") +
+  theme_minimal()
+```
+
+
+

@@ -1,0 +1,227 @@
+---
+title: "Index of Concentration at the Extremes Analysis"
+author: "Luis Emilio Munoz"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    theme: flatly
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+  word_document:
+    toc: true
+    toc_depth: 3
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(data.table)
+library(janitor)
+library(epitools)
+library(gt)
+````
+
+## 1. Cargar y limpiar datos
+
+```{r load-data}
+df <- fread(here::here("./merge/output/ICE-analysis-final.csv")) %>%
+  clean_names()
+
+glimpse(df)
+```
+
+## 2. Calcular tasas por ICE\_hhinc\_quintile
+
+```{r rate-income}
+income_rates <- df %>%
+  group_by(ice_hhinc_quintile) %>%
+  summarise(
+    muertes = sum(firearm_minors, na.rm = TRUE),
+    poblacion_1_19 = sum(pop_1_19, na.rm = TRUE),
+    tasa = (muertes / poblacion_1_19) * 100000
+  )
+
+  income_rates
+```
+
+## 3. Calcular tasas por ICE\_combined\_quintile
+
+```{r rate-combined}
+combined_rates <- df %>%
+  group_by(ice_combined_quintile) %>%
+  summarise(
+    muertes = sum(firearm_minors, na.rm = TRUE),
+    poblacion = sum(pop_1_19, na.rm = TRUE),
+    tasa = (muertes / poblacion) * 100000
+  )
+
+combined_rates
+
+```
+
+## 4. Visualización: ICE por ingreso
+
+```{r plot-income}
+income_rates %>%
+  ggplot(aes(x = factor(ice_hhinc_quintile), y = tasa)) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Tasa de muertes por armas en menores según ICE por ingreso",
+    x = "Quintil del ICE (Ingreso)",
+    y = "Tasa por 100,000 menores"
+  ) +
+  theme_minimal()
+```
+
+## 5. Visualización: ICE combinado
+
+```{r plot-combined}
+combined_rates %>%
+  ggplot(aes(x = factor(ice_combined_quintile), y = tasa)) +
+  geom_col(fill = "darkred") +
+  labs(
+    title = "Tasa de muertes por armas en menores según ICE combinado",
+    x = "Quintil del ICE (Combinado)",
+    y = "Tasa por 100,000 menores"
+  ) +
+  theme_minimal()
+```
+
+
+---
+
+## Introduction
+
+This report examines the relationship between structural inequality and firearm-related deaths among minors (ages 1–19) in Puerto Rico from 2019 to 2022. Using the Index of Concentration at the Extremes (ICE), we analyze geographic patterns of privilege and deprivation to evaluate whether structural disadvantage is associated with youth firearm mortality.
+
+We use two ICE variants:
+- **ICE-Income**: based on the spatial concentration of high-income vs. low-income households.
+- **ICE-Combined**: combines income and racial dimensions, contrasting high-income non-Hispanic white residents with low-income Black residents.
+
+ICE values range from –1 (maximum deprivation) to +1 (maximum privilege).
+
+---
+
+## Data
+
+```{r load-data}
+df <- fread(here::here("merge/output/ice-analysis-final.csv"))
+
+glimpse(df)
+summary(df)
+
+```
+
+---
+
+##Descriptive Summary
+```{r desc-stats}
+df %>%
+  summarise(
+    n_tracts = n(),
+    total_deaths = sum(firearm_minor, na.rm = TRUE),
+    total_pop = sum(pop_1_19, na.rm = TRUE),
+    death_rate_per_100k = (total_deaths / total_pop) * 100000
+  )
+```
+
+---
+
+## ICE Distribution
+
+```{r histogram-ice}
+df_long <- df %>%
+  select(ICE_hhinc, ICE_combined) %>%
+  pivot_longer(cols = everything(), names_to = "ICE_Type", values_to = "ICE_Value") %>%
+  mutate(
+    ICE_Type = recode(ICE_Type,
+                      ice_hhinc = "ICE - Income",
+                      ice_combined = "ICE - Income + Race")
+  )
+
+ggplot(df_long, aes(x = ICE_Value)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  facet_wrap(~ICE_Type, ncol = 1) +
+  labs(
+    title = "Distribution of ICE Values Across Census Tracts",
+    x = "ICE Value",
+    y = "Number of Tracts"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## Death Rate vs ICE (Scatter Plot)
+
+```{r scatterplot}
+
+df_expanded <- df %>%
+  filter(firearm_minor > 0) %>%
+  tidyr::uncount(weights = firearm_minor)
+  theme_minimal()
+
+
+ggplot(df_expanded, aes(x = ICE_combined_quintile, y = 1)) +
+  geom_jitter(height = 0.1, alpha = 0.4, color = "#3182bd") +
+  labs(
+    title = "Distribución de muertes individuales por ICE-combine",
+    x = "ICE - Income",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+  
+  
+```
+
+---
+
+## Rates by ICE Quintile
+
+```{r rate-by-quintile}
+df %>%
+  group_by(ICE_hhinc_quintile) %>%
+  summarise(
+    n_tracts = n(),
+    deaths = sum(firearm_minor, na.rm = TRUE),
+    total_pop = sum(pop_1_19, na.rm = TRUE),
+    rate = ((deaths / total_pop) * 100000) / 4
+  )
+
+
+df %>%
+  group_by(ICE_combined_quintile) %>%
+  summarise(
+    n_tracts = n(),
+    deaths = sum(firearm_minor, na.rm = TRUE),
+    total_pop = sum(pop_1_19, na.rm = TRUE),
+    rate = ((deaths / total_pop) * 100000) / 4
+  )
+
+```
+
+
+## Correlation: ICE vs Firearm Death Rate
+
+```{r correlation}
+df <- df %>%
+  mutate(rate_per_100k = (firearm_minor / pop_1_19) * 100000)
+
+ggplot(df, aes(x = ICE_combined, y = rate_per_100k)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "firebrick") +
+  labs(title = "ICE Combined vs Firearm Death Rate", x = "ICE Combined", y = "Rate per 100,000 (1–19)") +
+  theme_minimal()
+```
+
+---
+
+## References
+
+Krieger, N., Waterman, P. D., Spasojevic, J., Li, W., Maduro, G., & Van Wye, G. (2016). *Public health monitoring of privilege and deprivation with the Index of Concentration at the Extremes.* American Journal of Public Health, 106(2), 256–263. https://doi.org/10.2105/AJPH.2015.302955
+

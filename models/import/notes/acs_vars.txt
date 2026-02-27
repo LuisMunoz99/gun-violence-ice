@@ -1,0 +1,5 @@
+code	short	description
+1	B01003_001	pop_total	Total population
+2	B17001_001	poverty_den	Denominator for poverty rate
+3	B17001_002	poverty_cnt	Number of people below poverty line
+4	B19013_001	hhinc_median	Median household income

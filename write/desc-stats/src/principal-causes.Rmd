@@ -1,0 +1,184 @@
+---
+title: "Principal Causes of Death (2019–2022)"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(dplyr)
+library(ggplot2)
+library(gt)
+library(data.table)
+library(flextable)
+library(tidyr)
+````
+
+## 1. Load Prepared Data
+
+```{r load-data}
+# Load pre-processed dataset (already contains 'cause_category')
+df <- fread(here::here("./individual/regdem/export/output/regdem2019-2022-final.csv"))
+
+# Filter relevant years
+df <- df %>% filter(DeathDate_Year %in% 2019:2022)  %>%
+    filter(ind_minor) 
+```
+
+## 2. Summary Table of Causes by Year
+```{r summary-table}
+summary_table <- df %>%
+  count(DeathDate_Year,  cause_category) %>%
+  group_by(DeathDate_Year) %>%
+  mutate(percent = round(100 * n / sum(n), 1)) %>%
+  ungroup()
+
+summary_table
+
+summary_table %>%
+  pivot_wider(names_from = DeathDate_Year, values_from = c(n, percent)) %>%
+  gt() %>%
+  tab_header(title = "Top Causes of Death by Year (2019–2022)") %>%
+  fmt_number(columns = everything(), decimals = 1)
+```
+
+## 5. Principal causes of death `r `
+```{r principal-causes}
+ranked <- summary_table %>%
+  group_by(DeathDate_Year) %>%
+  mutate(rank = rank(-n, ties.method = "min"),
+         label = paste0(rank, " (", n, ")")) %>%
+  ungroup()
+
+# 3. Order causes by total deaths across years
+order <- ranked %>%
+  group_by(cause_category) %>%
+  summarise(total = sum(n), .groups = "drop") %>%
+  arrange(desc(total)) %>%
+  pull(cause_category)
+
+# 4. Reshape for table format
+table_data <- ranked %>%
+  select(DeathDate_Year, cause_category, label) %>%
+  pivot_wider(names_from = DeathDate_Year, values_from = label) %>%
+  mutate(cause_category = factor(cause_category, levels = order)) %>%
+  arrange(cause_category)
+
+# 5. Create a clean flextable
+ft <- flextable(table_data) %>%
+  set_header_labels(
+    cause_category = "Cause of Death",
+    `2019` = "2019",
+    `2020` = "2020",
+    `2021` = "2021",
+    `2022` = "2022"
+  ) %>%
+  autofit() %>%
+  align(align = "left", part = "all") %>%
+  bold(part = "header") %>%
+  fontsize(size = 11, part = "all") %>%
+  padding(padding = 4) %>%
+  theme_booktabs() %>%
+  set_caption(caption = "Top Causes of Death by Year — Rank (Death Count)")
+
+ft
+```
+## 3. Trend Over Time: Line Plot
+
+```{r trend-plot}
+ggplot(summary_table, aes(x = DeathDate_Year, y = n, color = cause_category)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  labs(title = "Trends in Causes of Death (2019–2022)",
+       x = "Year", y = "Number of Deaths", color = "Cause") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## 4. Distribution in 2022: Horizontal Bar Chart
+
+```{r bar-2022}
+df %>%
+  filter(DeathDate_Year == 2022) %>%
+  count(cause_category, sort = TRUE) %>%
+  ggplot(aes(x = reorder(cause_category, n), y = n, fill = cause_category)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Cause of Death Distribution in 2022",
+       x = "Cause Category", y = "Number of Deaths") +
+  theme_minimal()
+```
+
+## 5. Principal causes of death `r `
+```{r tab}
+ranked <- summary_table %>%
+  group_by(DeathDate_Year) %>%
+  mutate(rank = rank(-n, ties.method = "min"),
+         label = paste0(rank, " (", n, ")")) %>%
+  ungroup()
+
+# 3. Order causes by total deaths across years
+order <- ranked %>%
+  group_by(cause_category) %>%
+  summarise(total = sum(n), .groups = "drop") %>%
+  arrange(desc(total)) %>%
+  pull(cause_category)
+
+# 4. Reshape for table format
+table_data <- ranked %>%
+  select(DeathDate_Year, cause_category, label) %>%
+  pivot_wider(names_from = DeathDate_Year, values_from = label) %>%
+  mutate(cause_category = factor(cause_category, levels = order)) %>%
+  arrange(cause_category)
+
+# 5. Create a clean flextable
+ft <- flextable(table_data) %>%
+  set_header_labels(
+    cause_category = "Cause of Death",
+    `2019` = "2019",
+    `2020` = "2020",
+    `2021` = "2021",
+    `2022` = "2022"
+  ) %>%
+  autofit() %>%
+  align(align = "left", part = "all") %>%
+  bold(part = "header") %>%
+  fontsize(size = 11, part = "all") %>%
+  padding(padding = 4) %>%
+  theme_booktabs() %>%
+  set_caption(caption = "Top Causes of Death by Year — Rank (Death Count)")
+
+ft
+```
+---
+
+## 6. Appendix
+
+* Dataset: `processed_death_data.csv`
+* Variables used: `DeathYear`, `cause_category`, `ControlNumber`
+* Excluded: unknown years, unclassified categories, suppressed small cells (if any)
+
+```
+
+---
+
+### ✅ What to Do Next:
+- Save as `causes_of_death_2019_2022.Rmd`
+- Ensure your file (`processed_death_data.csv`) includes:
+  - `DeathYear`: numeric
+  - `cause_category`: cleaned categorical variable
+  - `ControlNumber`: unique ID
+- Knit to HTML in RStudio
+
+Let me know if you want to:
+- Break it down further by age/sex,
+- Include interactive plots (`plotly`),
+- Export tables to Excel or PDF.
+```
+

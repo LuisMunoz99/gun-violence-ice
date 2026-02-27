@@ -19,8 +19,8 @@ args <- list(
   notes   = here("models/import/notes/acs_vars.txt")
 )
 
-# These are the table cells we want from the 2021 ACS‐5
-# Source: https://api.census.gov/data/2021/acs/acs5/variables.html
+# These are the table cells we want from the 2022 ACS 5-year
+# Source: https://api.census.gov/data/2022/acs/acs5/variables.html
 
 acs_vars <- tibble::tribble(
   ~code,           ~short,              ~description,
@@ -31,7 +31,7 @@ acs_vars <- tibble::tribble(
 )
 
 
-# List all variables in the 2025 ACS 5‑year
+# List all variables in the 2022 ACS 5-year
 vars <- load_variables(year = 2022, dataset = "acs5", cache = TRUE)
 
 # --- import census data ---

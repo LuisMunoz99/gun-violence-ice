@@ -25,6 +25,7 @@ ct <- fread(args$ct)
 deaths   <- fread(args$deaths)
 
 death2ct <- deaths %>%
+  mutate(ind_minor = coalesce(ind_minor, FALSE)) %>% # NAs from unmatched tracts set to FALSE
   group_by(GEOID) %>%
   summarise(
     deaths = sum(ind_minor, na.rm = TRUE)

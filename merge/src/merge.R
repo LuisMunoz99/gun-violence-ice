@@ -27,16 +27,17 @@ combined <- fread(args$combined)
 minors_pop <- fread(args$minors_pop) 
 
 
-# Merge firearm que tiene coords
-# merge ct data (buscar cual es la version master??? o solo tener los geoid y entonces anadirle los ICE values y deprived and shit 
-# los ice values anadirlos tambien los de cada metrica en el mismo df? 
-# merge un paquete para que write lo use entero.
-# anadirle las poblaciones de menores 
+# --- Merge ---
 
 
 out <- minors_pop %>%
   left_join(firearm_minors, by = "GEOID") %>%
-   mutate(firearm_minor = ind_firearm & ind_minor)  %>%
+  mutate(
+    ind_firearm = coalesce(ind_firearm, FALSE), # NAs from unmatched tracts set to FALSE
+    ind_minor   = coalesce(ind_minor, FALSE)    # NAs from unmatched tracts set to FALSE
+  ) %>%
+  mutate(firearm_minor = ind_firearm & ind_minor) %>%
+  { if (any(is.na(.$firearm_minor))) stop("INTEGRITY ERROR: NA in firearm_minor after coalesce — check source data"); . } %>%
   group_by(GEOID, pop_1_19) %>%
   summarize(
     firearm_minor = sum(firearm_minor, na.rm = TRUE),
@@ -47,4 +48,3 @@ out <- minors_pop %>%
   left_join(combined, by = "GEOID")
 
 fwrite(out, args$output) 
-

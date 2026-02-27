@@ -1,4 +1,5 @@
-# Makefile: Importing INDIVIDUAL sources of information
+# Makefile: individual
+# Location: individual/
 # Author: LMN
 
 .PHONY: all regdem pums census clean
@@ -12,10 +13,9 @@ pums:
 	$(MAKE) -C PUMS
 
 census:
-	$(MAKE) -C census/import
+	$(MAKE) -C census
 
 clean:
 	$(MAKE) -C regdem clean
 	$(MAKE) -C PUMS clean
-	$(MAKE) -C census/import clean
-
+	$(MAKE) -C census clean
